@@ -61,7 +61,7 @@
             padding: 10px;
             border-radius: 5px;
             width: 20%;
-            margin: 20px auto 0; /* Added more space at the top */
+            margin: 20px auto 0;
             background-color: #8013d3;
             color: #08cebe;
             font-weight: bold;
@@ -75,10 +75,10 @@
         }
 
         table {
-            width: 60%; /* Adjusted width of the table */
-            margin: 20px auto; /* Centered the table */
+            width: 60%;
+            margin: 20px auto;
             border-collapse: collapse;
-            font-family: Calibri, sans-serif; /* Set font to Calibri */
+            font-family: Calibri, sans-serif;
         }
 
         th,
@@ -86,15 +86,14 @@
             border: 1px solid #ddd;
             padding: 8px;
             text-align: left;
-            font-family: Calibri, sans-serif; /* Set font to Calibri */
+            font-family: Calibri, sans-serif;
         }
 
         th {
-            background-color: #ff0023; /* Set background color of top line to HEX #ff0023 */
-            color: white; /* Set text color to white */
+            background-color: #ff0023;
+            color: white;
         }
 
-        /* Adjusted width of the columns */
         th:first-child,
         td:first-child {
             width: 30%;
@@ -105,7 +104,6 @@
             width: 40%;
         }
 
-        /* Added style for the statement */
         #marginStatement {
             margin-top: 20px;
             padding: 10px;
@@ -113,7 +111,7 @@
             background-color: #8013d3;
             color: #08cebe;
             font-weight: bold;
-            width: 50%; /* Reduced width by 50% */
+            width: 50%;
             display: none;
             margin-left: auto;
             margin-right: auto;
@@ -127,7 +125,6 @@
     <label for="acquirerId">Acquirer ID:</label>
     <input type="text" id="acquirerId" name="acquirerId" maxlength="3" required>
 
-    
     <label for="merchantId">Merchant ID:</label>
     <input type="text" id="merchantId" name="merchantId" maxlength="15" required>
 
@@ -140,8 +137,6 @@
         <option value="USD">USD</option>
     </select>
 
-    <!-- Add more fields as needed -->
-
     <br>
 
     <button type="button" onclick="sendFirstStageData()">Send</button>
@@ -152,31 +147,31 @@
     <div id="responseData"></div>
 
     <div id="marginStatement">Exchange rate and Foreign Amount are inclusive of margin</div>
-    
-<script>
-    // Function to send data and display response for the first stage
-    async function sendFirstStageData() {
-        var acquirerId = document.getElementById("acquirerId").value;
-        var merchantId = document.getElementById("merchantId").value;
-        var currency = document.getElementById("currency").value;
 
-        // Store the generated URL in the variable
-        var generatedURL = `https://dhsrest.fmsapps.com/dhsv2/acquirers/${acquirerId}/merchants/${merchantId}/dccoffers?currency=${currency}&baseamount=1.00`;
+    <script>
+        // Function to send data and display response for the first stage
+        async function sendFirstStageData() {
+            var acquirerId = document.getElementById("acquirerId").value;
+            var merchantId = document.getElementById("merchantId").value;
+            var currency = document.getElementById("currency").value;
 
-        try {
-            // Fetch JSON response from the generated URL
-            var response = await fetch(generatedURL);
-            var responseData = await response.json();
+            // Store the generated URL in the variable
+            var generatedURL = `https://dhsrest.fmsapps.com/dhsv2/acquirers/${acquirerId}/merchants/${merchantId}/dccoffers?currency=${currency}&baseamount=1.00`;
 
-            // Check if the word "No such Merchant" is mentioned in the response
-            if (JSON.stringify(responseData).toLowerCase().includes("no such merchant")) {
+            try {
+                // Fetch JSON response from the generated URL
+                var response = await fetch(generatedURL);
+                var responseData = await response.json();
+
+                // Check if the word "No such Merchant" is mentioned in the response
+                if (JSON.stringify(responseData).toLowerCase().includes("no such merchant")) {
                     document.getElementById("notSetupBanner").style.display = "block";
                     document.getElementById("notAvailableBanner").style.display = "none";
                     // Hide the response content
                     document.getElementById("responseData").innerHTML = "";
                     // Hide the statement about the margin
                     document.getElementById("marginStatement").style.display = "none";
-            } else if (JSON.stringify(responseData).includes("{}")) {
+                } else if (JSON.stringify(responseData).includes("{}")) {
                     // Display the not available banner
                     document.getElementById("notAvailableBanner").style.display = "block";
                     document.getElementById("notSetupBanner").style.display = "none";
@@ -184,67 +179,57 @@
                     document.getElementById("responseData").innerHTML = "";
                     // Hide the statement about the margin
                     document.getElementById("marginStatement").style.display = "none";
-            } else if (JSON.stringify(responseData).toLowerCase().includes("rate")) {
-                // Display the labels with rate, inverse rate, and editable field for foreign amount
-                document.getElementById("notSetupBanner").style.display = "none";
-                document.getElementById("notAvailableBanner").style.display = "none";
+                } else if (JSON.stringify(responseData).toLowerCase().includes("rate")) {
+                    // Display the labels with rate, inverse rate, and editable field for foreign amount
+                    document.getElementById("notSetupBanner").style.display = "none";
+                    document.getElementById("notAvailableBanner").style.display = "none";
 
-                var exchangeRate = responseData.exchangeRate;
+                    var exchangeRate = responseData.exchangeRate;
 
-                // Calculate the inverse of responseData.exchangeRate.rate
-                var inverseRate = 1 / responseData.exchangeRate.rate;
+                    // Calculate the inverse of responseData.exchangeRate.rate
+                    var inverseRate = 1 / responseData.exchangeRate.rate;
 
-                // Display the labels and the second "Send" button
-                var labelsAndButtonContent = `<div>
-                                                <label>Exchange Rate: ${exchangeRate.rate}</label>
-                                                <label>Inverse Rate: ${inverseRate}</label>
-                                                <label>Foreign Amount:</label>
-                                                <input type="text" id="foreignAmount">
-                                                <label>Foreign Currency:</label>
-                                                <input type="text" id="foreignCurrency" readonly>
-                                                <button type="button" onclick="sendSecondStageData()">Send</button>
-                                            </div>`;
+                    // Display the labels and the second "Send" button
+                    var labelsAndButtonContent = `<div>
+                                                    <label>Exchange Rate: ${exchangeRate.rate}</label>
+                                                    <label>Inverse Rate: ${inverseRate}</label>
+                                                    <label>Foreign Amount:</label>
+                                                    <input type="text" id="foreignAmount">
+                                                    <label>Foreign Currency:</label>
+                                                    <input type="text" id="foreignCurrency" readonly>
+                                                    <button type="button" onclick="generateBaseAmount()">Generate Base Amount</button>
+                                                </div>`;
 
-                // Display the labels and the second "Send" button
-                document.getElementById("responseData").innerHTML = labelsAndButtonContent;
+                    // Display the labels and the second "Send" button
+                    document.getElementById("responseData").innerHTML = labelsAndButtonContent;
 
-                // Set the initial value for the foreign currency field based on the selected currency
-                document.getElementById("foreignCurrency").value = currency;
+                    // Set the initial value for the foreign currency field based on the selected currency
+                    document.getElementById("foreignCurrency").value = currency;
 
-                // Display the banner statement about the margin
-                document.getElementById("marginStatement").innerHTML = "Exchange rate and Foreign Amount are inclusive of margin";
-                document.getElementById("marginStatement").style.display = "block";
+                    // Display the banner statement about the margin
+                    document.getElementById("marginStatement").innerHTML = "Exchange rate and Foreign Amount are inclusive of margin";
+                    document.getElementById("marginStatement").style.display = "block";
 
-                // Display the initial response data in the console
-                console.log("Initial Response Data:", responseData);
-            } else {
-                // ... (your existing code for handling other cases)
+                    // Display the initial response data in the console
+                    console.log("Initial Response Data:", responseData);
+                } else {
+                    // ... (your existing code for handling other cases)
+                }
+
+            } catch (error) {
+                console.error("Error fetching data:", error);
             }
-
-        } catch (error) {
-            console.error("Error fetching data:", error);
         }
-    }
 
-    // Function to send data and display response for the second stage
-    async function sendSecondStageData() {
-        var acquirerId = document.getElementById("acquirerId").value;
-        var merchantId = document.getElementById("merchantId").value;
-        var currency = document.getElementById("currency").value;
-        var foreignAmount = document.getElementById("foreignAmount").value;
+        // Function to generate base amount and display response for the second stage
+        async function generateBaseAmount() {
+            var foreignAmount = document.getElementById("foreignAmount").value;
+            var inverseRate = document.getElementById("foreignCurrency").value;
 
-        // Store the generated URL in the variable
-        var generatedSecondStageURL = `https://dhsrest.fmsapps.com/dhsv2/acquirers/${acquirerId}/merchants/${merchantId}/dccoffers?currency=${currency}&baseamount=${foreignAmount}`;
-
-        try {
-            // Fetch JSON response from the generated URL
-            var response = await fetch(generatedSecondStageURL);
-            var responseData = await response.json();
+            // Calculate base amount by multiplying foreign amount with inverse rate
+            var baseAmount = foreignAmount * inverseRate;
 
             // Display the table with base amount and base currency
-            var exchangeRate = responseData.exchangeRate;
-            var baseCurrency = exchangeRate.baseCurrency;
-
             var tableContent = `<table>
                                     <tr>
                                         <th>Field</th>
@@ -252,11 +237,11 @@
                                     </tr>
                                     <tr>
                                         <td>Base Amount</td>
-                                        <td>${exchangeRate.baseAmount}</td>
+                                        <td>${baseAmount}</td>
                                     </tr>
                                     <tr>
                                         <td>Base Currency</td>
-                                        <td>${baseCurrency.alphaCode}</td>
+                                        <td>${currency}</td>
                                     </tr>
                                 </table>`;
 
@@ -267,14 +252,8 @@
             document.getElementById("foreignAmount").style.display = "none";
             document.getElementById("foreignCurrency").style.display = "none";
             document.querySelector("button").style.display = "none";
-
-        } catch (error) {
-            console.error("Error fetching data:", error);
         }
-    }
-</script>
-
-
+    </script>
 </body>
 
 </html>
