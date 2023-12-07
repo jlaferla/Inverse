@@ -210,8 +210,6 @@
 
                     // Display the labels and the second "Send" button
                     var labelsAndButtonContent = `<div id="labelsAndButtonContainer">
-                                                    <label>Exchange Rate: ${exchangeRate.rate}</label>
-                                                    <label>Inverse Rate: ${inverseRate}</label>
                                                     <label>Foreign Amount:</label>
                                                     <input type="text" id="foreignAmount">
                                                     <label>Foreign Currency:</label>
@@ -227,9 +225,6 @@
 
                     // Display the banner statement about the margin
                     document.getElementById("marginStatement").style.display = "block";
-
-                    // Hide the initial labels (Exchange Rate and Inverse Rate)
-                    document.getElementById("labelsAndButtonContainer").style.display = "none";
 
                     // Display the initial response data in the console
                     console.log("Initial Response Data:", responseDataGlobal);
