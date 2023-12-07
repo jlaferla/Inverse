@@ -171,9 +171,20 @@
 
             // Check if the word "No such Merchant" is mentioned in the response
             if (JSON.stringify(responseData).toLowerCase().includes("no such merchant")) {
-                // ... (your existing code for handling not setup banner)
+                    document.getElementById("notSetupBanner").style.display = "block";
+                    document.getElementById("notAvailableBanner").style.display = "none";
+                    // Hide the response content
+                    document.getElementById("responseData").innerHTML = "";
+                    // Hide the statement about the margin
+                    document.getElementById("marginStatement").style.display = "none";
             } else if (JSON.stringify(responseData).includes("{}")) {
-                // ... (your existing code for handling not available banner)
+                    // Display the not available banner
+                    document.getElementById("notAvailableBanner").style.display = "block";
+                    document.getElementById("notSetupBanner").style.display = "none";
+                    // Hide the response content
+                    document.getElementById("responseData").innerHTML = "";
+                    // Hide the statement about the margin
+                    document.getElementById("marginStatement").style.display = "none";
             } else if (JSON.stringify(responseData).toLowerCase().includes("rate")) {
                 // Display the labels with rate, inverse rate, and editable field for foreign amount
                 document.getElementById("notSetupBanner").style.display = "none";
@@ -181,8 +192,8 @@
 
                 var exchangeRate = responseData.exchangeRate;
 
-                // Calculate the inverse of exchangeRate.rate
-                var inverseRate = 1 / exchangeRate.rate;
+                // Calculate the inverse of responseData.exchangeRate.rate
+                var inverseRate = 1 / responseData.exchangeRate.rate;
 
                 // Display the labels and the second "Send" button
                 var labelsAndButtonContent = `<div>
