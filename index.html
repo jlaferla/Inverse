@@ -242,32 +242,59 @@
             // Calculate base amount by multiplying foreign amount with inverse rate
             var baseAmount = foreignAmount * inverseRate;
 
-            // Display the table with base amount, base currency, foreign amount, and foreign currency
-            var tableContent = `<table>
-                                    <tr>
-                                        <th>Field</th>
-                                        <th>Value</th>
-                                    </tr>
-                                    <tr>
-                                        <td>Base Amount</td>
-                                        <td>${baseAmount}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Base Currency</td>
-                                        <td>${responseDataGlobal.exchangeRate.baseCurrency.alphaCode}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Foreign Amount</td>
-                                        <td>${foreignAmount}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Foreign Currency</td>
-                                        <td>${document.getElementById("foreignCurrency").value}</td>
-                                    </tr>
-                                </table>`;
+            // Check if the table already exists
+            var existingTable = document.getElementById("resultTable");
 
-            // Append the table content to the existing content
-            document.getElementById("responseData").innerHTML += tableContent;
+            if (!existingTable) {
+                // If the table doesn't exist, create a new one
+                var tableContent = `<table id="resultTable">
+                                        <tr>
+                                            <th>Field</th>
+                                            <th>Value</th>
+                                        </tr>
+                                        <tr>
+                                            <td>Base Amount</td>
+                                            <td>${baseAmount}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Base Currency</td>
+                                            <td>${responseDataGlobal.exchangeRate.baseCurrency.alphaCode}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Foreign Amount</td>
+                                            <td>${foreignAmount}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Foreign Currency</td>
+                                            <td>${document.getElementById("foreignCurrency").value}</td>
+                                        </tr>
+                                    </table>`;
+
+                // Append the new table content to the existing content
+                document.getElementById("responseData").innerHTML += tableContent;
+            } else {
+                // If the table already exists, update its content
+                existingTable.innerHTML = `<tr>
+                                            <th>Field</th>
+                                            <th>Value</th>
+                                        </tr>
+                                        <tr>
+                                            <td>Base Amount</td>
+                                            <td>${baseAmount}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Base Currency</td>
+                                            <td>${responseDataGlobal.exchangeRate.baseCurrency.alphaCode}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Foreign Amount</td>
+                                            <td>${foreignAmount}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Foreign Currency</td>
+                                            <td>${document.getElementById("foreignCurrency").value}</td>
+                                        </tr>`;
+            }
         }
     </script>
 </body>
