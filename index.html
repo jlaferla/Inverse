@@ -240,7 +240,7 @@
             var inverseRate = 1 / responseDataGlobal.exchangeRate.rate; // Use the inverse rate from the first stage
 
             // Calculate base amount by multiplying foreign amount with inverse rate
-            var baseAmount = foreignAmount * inverseRate;
+            var baseAmount = (foreignAmount * inverseRate).toFixed(2); // Round to 2 decimal places
 
             // Check if the table already exists
             var existingTable = document.getElementById("resultTable");
