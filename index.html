@@ -213,12 +213,18 @@
                                                     <label>Foreign Amount:</label>
                                                     <input type="text" id="foreignAmount" readonly>
                                                     <label>Foreign Currency:</label>
-                                                    <input type="text" id="foreignCurrency" readonly value="${currency}">
+                                                    <input type="text" id="foreignCurrency" readonly>
                                                     <button type="button" onclick="generateBaseAmount()">Generate Base Amount</button>
                                                 </div>`;
 
                     // Display the labels and the second "Send" button
                     document.getElementById("responseData").innerHTML = labelsAndButtonContent;
+
+                    // Set the initial value for the foreign currency field based on the selected currency
+                    document.getElementById("foreignCurrency").value = currency;
+
+                    // Set the initial value for the foreign amount field based on user input
+                    document.getElementById("foreignAmount").value = document.getElementById("foreignAmount").value || 0;
 
                     // Display the banner statement about the margin
                     document.getElementById("marginStatement").style.display = "block";
@@ -236,13 +242,7 @@
 
         // Function to generate base amount and display response for the second stage
         function generateBaseAmount() {
-            // Ensure the "Foreign Amount" field remains unchanged unless manually edited
-            var foreignAmountField = document.getElementById("foreignAmount");
-            if (!foreignAmountField.value.trim()) {
-                foreignAmountField.value = "1.00";
-            }
-
-            var foreignAmount = foreignAmountField.value;
+            var foreignAmount = document.getElementById("foreignAmount").value;
             var inverseRate = 1 / responseDataGlobal.exchangeRate.rate; // Use the inverse rate from the first stage
 
             // Calculate base amount by multiplying foreign amount with inverse rate
@@ -264,8 +264,11 @@
                                     </tr>
                                 </table>`;
 
-            // Append the table content to the existing content
-            document.getElementById("responseData").innerHTML += tableContent;
+            // Display the table content
+            document.getElementById("responseData").innerHTML = tableContent;
+
+            // Hide the labels and the second "Send" button
+            document.getElementById("labelsAndButtonContainer").style.display = "none";
         }
     </script>
 </body>
