@@ -211,7 +211,7 @@
                     // Display the labels and the second "Send" button
                     var labelsAndButtonContent = `<div id="labelsAndButtonContainer">
                                                     <label>Foreign Amount:</label>
-                                                    <input type="text" id="foreignAmount" value="1.00">
+                                                    <input type="text" id="foreignAmount" readonly>
                                                     <label>Foreign Currency:</label>
                                                     <input type="text" id="foreignCurrency" readonly value="${currency}">
                                                     <button type="button" onclick="generateBaseAmount()">Generate Base Amount</button>
@@ -236,7 +236,13 @@
 
         // Function to generate base amount and display response for the second stage
         function generateBaseAmount() {
-            var foreignAmount = document.getElementById("foreignAmount").value;
+            // Ensure the "Foreign Amount" field remains unchanged unless manually edited
+            var foreignAmountField = document.getElementById("foreignAmount");
+            if (!foreignAmountField.value.trim()) {
+                foreignAmountField.value = "1.00";
+            }
+
+            var foreignAmount = foreignAmountField.value;
             var inverseRate = 1 / responseDataGlobal.exchangeRate.rate; // Use the inverse rate from the first stage
 
             // Calculate base amount by multiplying foreign amount with inverse rate
