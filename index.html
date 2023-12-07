@@ -213,15 +213,12 @@
                                                     <label>Foreign Amount:</label>
                                                     <input type="text" id="foreignAmount">
                                                     <label>Foreign Currency:</label>
-                                                    <input type="text" id="foreignCurrency" readonly>
+                                                    <input type="text" id="foreignCurrency" readonly value="${currency}">
                                                     <button type="button" onclick="generateBaseAmount()">Generate Base Amount</button>
                                                 </div>`;
 
                     // Display the labels and the second "Send" button
                     document.getElementById("responseData").innerHTML = labelsAndButtonContent;
-
-                    // Set the initial value for the foreign currency field based on the selected currency
-                    document.getElementById("foreignCurrency").value = currency;
 
                     // Display the banner statement about the margin
                     document.getElementById("marginStatement").style.display = "block";
