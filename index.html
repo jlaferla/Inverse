@@ -242,7 +242,7 @@
             // Calculate base amount by multiplying foreign amount with inverse rate
             var baseAmount = foreignAmount * inverseRate;
 
-            // Display the table with base amount and base currency
+            // Display the table with base amount, base currency, foreign amount, and foreign currency
             var tableContent = `<table>
                                     <tr>
                                         <th>Field</th>
@@ -255,6 +255,14 @@
                                     <tr>
                                         <td>Base Currency</td>
                                         <td>${responseDataGlobal.exchangeRate.baseCurrency.alphaCode}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Foreign Amount</td>
+                                        <td>${foreignAmount}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Foreign Currency</td>
+                                        <td>${document.getElementById("foreignCurrency").value}</td>
                                     </tr>
                                 </table>`;
 
