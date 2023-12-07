@@ -191,14 +191,14 @@
 
                     // Display the labels and the second "Send" button
                     var labelsAndButtonContent = `<div>
-                                                    <label>Exchange Rate: ${exchangeRate.rate}</label>
-                                                    <label>Inverse Rate: ${inverseRate}</label>
-                                                    <label>Foreign Amount:</label>
-                                                    <input type="text" id="foreignAmount">
-                                                    <label>Foreign Currency:</label>
-                                                    <input type="text" id="foreignCurrency" readonly>
-                                                    <button type="button" onclick="generateBaseAmount()">Generate Base Amount</button>
-                                                </div>`;
+                                                <label>Exchange Rate: ${exchangeRate.rate}</label>
+                                                <label>Inverse Rate: ${inverseRate}</label>
+                                                <label>Foreign Amount:</label>
+                                                <input type="text" id="foreignAmount">
+                                                <label>Foreign Currency:</label>
+                                                <input type="text" id="foreignCurrency" readonly>
+                                                <button type="button" onclick="generateBaseAmount()">Generate Base Amount</button>
+                                            </div>`;
 
                     // Display the labels and the second "Send" button
                     document.getElementById("responseData").innerHTML = labelsAndButtonContent;
@@ -224,7 +224,7 @@
         // Function to generate base amount and display response for the second stage
         async function generateBaseAmount() {
             var foreignAmount = document.getElementById("foreignAmount").value;
-            var inverseRate = document.getElementById("foreignCurrency").value;
+            var inverseRate = 1 / responseData.exchangeRate.rate; // Use the inverse rate from the first stage
 
             // Calculate base amount by multiplying foreign amount with inverse rate
             var baseAmount = foreignAmount * inverseRate;
