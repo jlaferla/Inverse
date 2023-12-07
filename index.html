@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rate Enquiry</title>
+    <style>
+        body {
+            font-family: Calibri, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        input,
+        select {
+            width: 200px;
+            padding: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #ff0023;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #d1001c;
+        }
+
+        h1 {
+            color: #ff0023;
+        }
+
+        #responseData {
+            margin-top: 20px;
+            text-align: left;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .response-text {
+            color: #8013d3;
+            text-align: left;
+        }
+
+        .response-banner {
+            display: none;
+            padding: 10px;
+            border-radius: 5px;
+            width: 20%;
+            margin: 20px auto 0; /* Added more space at the top */
+            background-color: #8013d3;
+            color: #08cebe;
+            font-weight: bold;
+        }
+
+        #notSetupBanner,
+        #notAvailableBanner {
+            background-color: #8013d3;
+            color: #08cebe;
+            font-weight: bold;
+        }
+
+        table {
+            width: 60%; /* Adjusted width of the table */
+            margin: 20px auto; /* Centered the table */
+            border-collapse: collapse;
+            font-family: Calibri, sans-serif; /* Set font to Calibri */
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+            font-family: Calibri, sans-serif; /* Set font to Calibri */
+        }
+
+        th {
+            background-color: #ff0023; /* Set background color of top line to HEX #ff0023 */
+            color: white; /* Set text color to white */
+        }
+
+        /* Adjusted width of the columns */
+        th:first-child,
+        td:first-child {
+            width: 30%;
+        }
+
+        th:last-child,
+        td:last-child {
+            width: 40%;
+        }
+
+        /* Added style for the statement */
+        #marginStatement {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #8013d3;
+            color: #08cebe;
+            font-weight: bold;
+            width: 50%; /* Reduced width by 50% */
+            display: none;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Rate Enquiry</h1>
+
+    <label for="merchantId">Merchant ID:</label>
+    <input type="text" id="merchantId" name="merchantId" maxlength="15" required>
+
+    <label for="baseAmount">Base Amount:</label>
+    <input type="text" id="baseAmount" name="baseAmount" value="1.00" required>
+
+    <label for="currency">Currency:</label>
+    <select id="currency" name="currency" required>
+        <option value="AED">AED</option>
+        <option value="AUD">AUD</option>
+
+        <option value="EUR">EUR</option>
+        <option value="GBP">GBP</option>
+        <option value="USD">USD</option>
+    </select>
+
+    <!-- Add more fields as needed -->
+
+    <br>
+
+    <button type="button" onclick="sendData()">Send</button>
+
+    <div id="notSetupBanner" class="response-banner">Merchant is not setup</div>
+    <div id="notAvailableBanner" class="response-banner">Exchange Rate not available</div>
+
+    <div id="responseData"></div>
+
+    <div id="marginStatement">Exchange rate and Foreign Amount are inclusive of margin</div>
+
+<script>
+    // Function to send data and display response
+    async function sendData() {
+        var acquirerId = document.getElementById("acquirerId").value;
+        var merchantId = document.getElementById("merchantId").value;
+        var currency = document.getElementById("currency").value;
+
+        // Store the generated URL in the variable
+        var generatedURL = `https://dhsrest.fmsapps.com/dhsv2/acquirers/${acquirerId}/merchants/${merchantId}/dccoffers?currency=${currency}&baseamount=1.00`;
+
+        try {
+            // Fetch JSON response from the generated URL
+            var response = await fetch(generatedURL);
+            var responseData = await response.json();
+
+            // Check if the word "No such Merchant" is mentioned in the response
+            if (JSON.stringify(responseData).toLowerCase().includes("no such merchant")) {
+                // ... (your existing code for handling not setup banner)
+            } else if (JSON.stringify(responseData).includes("{}")) {
+                // ... (your existing code for handling not available banner)
+            } else if (JSON.stringify(responseData).toLowerCase().includes("rate")) {
+                // Display the labels with rate, inverse rate, and editable field for foreign amount
+                document.getElementById("notSetupBanner").style.display = "none";
+                document.getElementById("notAvailableBanner").style.display = "none";
+
+                var exchangeRate = responseData.exchangeRate;
+
+                // Calculate the inverse of exchangeRate.rate
+                var inverseRate = 1 / exchangeRate.rate;
+
+                // Display the labels and "Send" button
+                var labelsAndButtonContent = `<div>
+                                                <label>Exchange Rate: ${exchangeRate.rate}</label>
+                                                <label>Inverse Rate: ${inverseRate}</label>
+                                                <label>Foreign Amount:</label>
+                                                <input type="text" id="foreignAmount">
+                                                <label>Foreign Currency:</label>
+                                                <input type="text" id="foreignCurrency" readonly>
+                                                <button type="button" onclick="sendForeignData()">Send</button>
+                                            </div>`;
+
+                // Display the labels and "Send" button
+                document.getElementById("responseData").innerHTML = labelsAndButtonContent;
+
+                // Set the initial value for the foreign currency field based on the selected currency
+                document.getElementById("foreignCurrency").value = currency;
+
+                // Display the banner statement about the margin
+                document.getElementById("marginStatement").innerHTML = "Exchange rate and Foreign Amount are inclusive of margin";
+                document.getElementById("marginStatement").style.display = "block";
+            } else {
+                // ... (your existing code for handling other cases)
+            }
+
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    }
+
+    // Function to send foreign data and display response
+    async function sendForeignData() {
+        var acquirerId = document.getElementById("acquirerId").value;
+        var merchantId = document.getElementById("merchantId").value;
+        var currency = document.getElementById("currency").value;
+        var foreignAmount = document.getElementById("foreignAmount").value;
+
+        // Store the generated URL in the variable
+        var generatedForeignURL = `https://dhsrest.fmsapps.com/dhsv2/acquirers/${acquirerId}/merchants/${merchantId}/dccoffers?currency=${currency}&baseamount=${foreignAmount}`;
+
+        try {
+            // Fetch JSON response from the generated URL
+            var response = await fetch(generatedForeignURL);
+            var responseData = await response.json();
+
+            // Display the table with base amount and base currency
+            var exchangeRate = responseData.exchangeRate;
+            var baseCurrency = exchangeRate.baseCurrency;
+
+            var tableContent = `<table>
+                                    <tr>
+                                        <th>Field</th>
+                                        <th>Value</th>
+                                    </tr>
+                                    <tr>
+                                        <td>Base Amount</td>
+                                        <td>${exchangeRate.baseAmount}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Base Currency</td>
+                                        <td>${baseCurrency.alphaCode}</td>
+                                    </tr>
+                                </table>`;
+
+            // Display the table content
+            document.getElementById("responseData").innerHTML = tableContent;
+
+            // Hide the labels and "Send" button
+            document.getElementById("foreignAmount").style.display = "none";
+            document.getElementById("foreignCurrency").style.display = "none";
+            document.querySelector("button").style.display = "none";
+
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    }
+    </script>
+
+</body>
+
+</html>
