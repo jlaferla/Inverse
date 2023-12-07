@@ -262,12 +262,9 @@
                                 </table>`;
 
             // Display the table content
-            document.getElementById("responseData").innerHTML = tableContent;
+            document.getElementById("responseData").innerHTML += tableContent;
 
             // Hide the labels and the second "Send" button
-            document.getElementById("foreignAmount").style.display = "none";
-            document.getElementById("foreignCurrency").style.display = "none";
-            document.querySelector("button").style.display = "none";
             document.getElementById("labelsAndButtonContainer").style.display = "none";
         }
     </script>
