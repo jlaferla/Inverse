@@ -24,6 +24,8 @@
             padding: 8px;
             margin-bottom: 10px;
             box-sizing: border-box;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         button {
@@ -33,6 +35,7 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            margin-top: 10px;
         }
 
         button:hover {
@@ -116,6 +119,17 @@
             margin-left: auto;
             margin-right: auto;
         }
+
+        #labelsAndButtonContainer {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        #labelsAndButtonContainer label,
+        #labelsAndButtonContainer input {
+            display: block;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 
@@ -146,7 +160,9 @@
 
     <div id="responseData"></div>
 
-    <div id="marginStatement">Exchange rate and Foreign Amount are inclusive of margin</div>
+    <div id="marginStatement">Exchange rate is inclusive of margin</div>
+
+    <div id="labelsAndButtonContainer"></div>
 
     <script>
         // Global variable to store responseData from the first stage
@@ -193,15 +209,15 @@
                     var inverseRate = 1 / responseDataGlobal.exchangeRate.rate;
 
                     // Display the labels and the second "Send" button
-                    var labelsAndButtonContent = `<div>
-                                                <label>Exchange Rate: ${exchangeRate.rate}</label>
-                                                <label>Inverse Rate: ${inverseRate}</label>
-                                                <label>Foreign Amount:</label>
-                                                <input type="text" id="foreignAmount">
-                                                <label>Foreign Currency:</label>
-                                                <input type="text" id="foreignCurrency" readonly>
-                                                <button type="button" onclick="generateBaseAmount()">Generate Base Amount</button>
-                                            </div>`;
+                    var labelsAndButtonContent = `<div id="labelsAndButtonContainer">
+                                                    <label>Exchange Rate: ${exchangeRate.rate}</label>
+                                                    <label>Inverse Rate: ${inverseRate}</label>
+                                                    <label>Foreign Amount:</label>
+                                                    <input type="text" id="foreignAmount">
+                                                    <label>Foreign Currency:</label>
+                                                    <input type="text" id="foreignCurrency" readonly>
+                                                    <button type="button" onclick="generateBaseAmount()">Generate Base Amount</button>
+                                                </div>`;
 
                     // Display the labels and the second "Send" button
                     document.getElementById("responseData").innerHTML = labelsAndButtonContent;
@@ -255,6 +271,7 @@
             document.getElementById("foreignAmount").style.display = "none";
             document.getElementById("foreignCurrency").style.display = "none";
             document.querySelector("button").style.display = "none";
+            document.getElementById("labelsAndButtonContainer").style.display = "none";
         }
     </script>
 </body>
