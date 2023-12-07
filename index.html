@@ -146,9 +146,12 @@
 
     <div id="responseData"></div>
 
-    <div id="marginStatement">Exchange rate is inclusive of margin</div>
+    <div id="marginStatement">Exchange rate and Foreign Amount are inclusive of margin</div>
 
     <script>
+        // Global variable to store responseData from the first stage
+        var responseDataGlobal;
+
         // Function to send data and display response for the first stage
         async function sendFirstStageData() {
             var acquirerId = document.getElementById("acquirerId").value;
@@ -161,17 +164,17 @@
             try {
                 // Fetch JSON response from the generated URL
                 var response = await fetch(generatedURL);
-                var responseData = await response.json();
+                responseDataGlobal = await response.json();
 
                 // Check if the word "No such Merchant" is mentioned in the response
-                if (JSON.stringify(responseData).toLowerCase().includes("no such merchant")) {
+                if (JSON.stringify(responseDataGlobal).toLowerCase().includes("no such merchant")) {
                     document.getElementById("notSetupBanner").style.display = "block";
                     document.getElementById("notAvailableBanner").style.display = "none";
                     // Hide the response content
                     document.getElementById("responseData").innerHTML = "";
                     // Hide the statement about the margin
                     document.getElementById("marginStatement").style.display = "none";
-                } else if (JSON.stringify(responseData).includes("{}")) {
+                } else if (JSON.stringify(responseDataGlobal).includes("{}")) {
                     // Display the not available banner
                     document.getElementById("notAvailableBanner").style.display = "block";
                     document.getElementById("notSetupBanner").style.display = "none";
@@ -179,15 +182,15 @@
                     document.getElementById("responseData").innerHTML = "";
                     // Hide the statement about the margin
                     document.getElementById("marginStatement").style.display = "none";
-                } else if (JSON.stringify(responseData).toLowerCase().includes("rate")) {
+                } else if (JSON.stringify(responseDataGlobal).toLowerCase().includes("rate")) {
                     // Display the labels with rate, inverse rate, and editable field for foreign amount
                     document.getElementById("notSetupBanner").style.display = "none";
                     document.getElementById("notAvailableBanner").style.display = "none";
 
-                    var exchangeRate = responseData.exchangeRate;
+                    var exchangeRate = responseDataGlobal.exchangeRate;
 
                     // Calculate the inverse of responseData.exchangeRate.rate
-                    var inverseRate = 1 / responseData.exchangeRate.rate;
+                    var inverseRate = 1 / responseDataGlobal.exchangeRate.rate;
 
                     // Display the labels and the second "Send" button
                     var labelsAndButtonContent = `<div>
@@ -211,7 +214,7 @@
                     document.getElementById("marginStatement").style.display = "block";
 
                     // Display the initial response data in the console
-                    console.log("Initial Response Data:", responseData);
+                    console.log("Initial Response Data:", responseDataGlobal);
                 } else {
                     // ... (your existing code for handling other cases)
                 }
@@ -222,9 +225,9 @@
         }
 
         // Function to generate base amount and display response for the second stage
-        async function generateBaseAmount() {
+        function generateBaseAmount() {
             var foreignAmount = document.getElementById("foreignAmount").value;
-            var inverseRate = 1 / responseData.exchangeRate.rate; // Use the inverse rate from the first stage
+            var inverseRate = 1 / responseDataGlobal.exchangeRate.rate; // Use the inverse rate from the first stage
 
             // Calculate base amount by multiplying foreign amount with inverse rate
             var baseAmount = foreignAmount * inverseRate;
@@ -241,7 +244,7 @@
                                     </tr>
                                     <tr>
                                         <td>Base Currency</td>
-                                        <td>${currency}</td>
+                                        <td>${responseDataGlobal.exchangeRate.baseCurrency.alphaCode}</td>
                                     </tr>
                                 </table>`;
 
