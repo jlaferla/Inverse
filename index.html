@@ -239,7 +239,7 @@
         // Function to generate base amount and display response for the second stage
         function generateBaseAmount() {
             var foreignAmount = document.getElementById("foreignAmount").value;
-            var inverseRate = (1 / responseDataGlobal.exchangeRate.rate).toFixed(4); // Use the inverse rate from the first stage
+            var inverseRate = (1 / responseDataGlobal.exchangeRate.rate); // Use the inverse rate from the first stage
 
             // Calculate base amount by multiplying foreign amount with inverse rate
             var baseAmount = (foreignAmount * inverseRate).toFixed(2); // Round to 2 decimal places
@@ -268,7 +268,7 @@
                                         </tr>
                                         <tr>
                                             <td>Inverse Rate</td>
-                                            <td>1 ${document.getElementById("foreignCurrency").value} = ${inverseRate} ${responseDataGlobal.exchangeRate.baseCurrency.alphaCode}</td>
+                                            <td>1 ${document.getElementById("foreignCurrency").value} = ${(inverseRate).toFixed(4)} ${responseDataGlobal.exchangeRate.baseCurrency.alphaCode}</td>
                                         </tr>
                                     </table>`;
 
