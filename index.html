@@ -256,19 +256,19 @@
                                         </tr>
                                         <tr>
                                             <td>Base Amount</td>
-                                            <td>${baseAmount}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Base Currency</td>
-                                            <td>${responseDataGlobal.exchangeRate.baseCurrency.alphaCode}</td>
+                                            <td>${responseDataGlobal.exchangeRate.baseCurrency.alphaCode} ${baseAmount}</td>
                                         </tr>
                                         <tr>
                                             <td>Foreign Amount</td>
-                                            <td>${foreignAmount}</td>
+                                            <td>${document.getElementById("foreignCurrency").value} ${foreignAmount}</td>
                                         </tr>
                                         <tr>
-                                            <td>Foreign Currency</td>
-                                            <td>${document.getElementById("foreignCurrency").value}</td>
+                                            <td>Exchange Rate</td>
+                                            <td>1 ${responseDataGlobal.exchangeRate.baseCurrency.alphaCode} = ${responseDataGlobal.exchangeRate.rate} ${document.getElementById("foreignCurrency").value}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Inverse Rate</td>
+                                            <td>1 ${document.getElementById("foreignCurrency").value} = ${inverseRate} ${responseDataGlobal.exchangeRate.baseCurrency.alphaCode}</td>
                                         </tr>
                                     </table>`;
 
@@ -282,19 +282,19 @@
                                         </tr>
                                         <tr>
                                             <td>Base Amount</td>
-                                            <td>${baseAmount}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Base Currency</td>
-                                            <td>${responseDataGlobal.exchangeRate.baseCurrency.alphaCode}</td>
+                                            <td>${responseDataGlobal.exchangeRate.baseCurrency.alphaCode} ${baseAmount}</td>
                                         </tr>
                                         <tr>
                                             <td>Foreign Amount</td>
-                                            <td>${foreignAmount}</td>
+                                            <td>${document.getElementById("foreignCurrency").value} ${foreignAmount}</td>
                                         </tr>
                                         <tr>
-                                            <td>Foreign Currency</td>
-                                            <td>${document.getElementById("foreignCurrency").value}</td>
+                                            <td>Exchange Rate</td>
+                                            <td>1 ${responseDataGlobal.exchangeRate.baseCurrency.alphaCode} = ${responseDataGlobal.exchangeRate.rate} ${document.getElementById("foreignCurrency").value}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Inverse Rate</td>
+                                            <td>1 ${document.getElementById("foreignCurrency").value} = ${inverseRate} ${responseDataGlobal.exchangeRate.baseCurrency.alphaCode}</td>
                                         </tr>`;
             }
         }
