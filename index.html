@@ -268,7 +268,7 @@
                                         </tr>
                                         <tr>
                                             <td>Inverse Rate</td>
-                                            <td>1 ${document.getElementById("foreignCurrency").value} = ${(inverseRate).toFixed(4)} ${responseDataGlobal.exchangeRate.baseCurrency.alphaCode}</td>
+                                            <td>1 ${document.getElementById("foreignCurrency").value} = ${inverseRate} ${responseDataGlobal.exchangeRate.baseCurrency.alphaCode}</td>
                                         </tr>
                                     </table>`;
 
@@ -293,8 +293,8 @@
                                             <td>1 ${responseDataGlobal.exchangeRate.baseCurrency.alphaCode} = ${responseDataGlobal.exchangeRate.rate} ${document.getElementById("foreignCurrency").value}</td>
                                         </tr>
                                         <tr>
-                                            <td>Foreign Currency</td>
-                                            <td>${document.getElementById("foreignCurrency").value}</td>
+                                            <td>Inverse Rate</td>
+                                            <td>1 ${document.getElementById("foreignCurrency").value} = ${inverseRate} ${responseDataGlobal.exchangeRate.baseCurrency.alphaCode}</td>
                                         </tr>`;
             }
         }
