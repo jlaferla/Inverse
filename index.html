@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rate Enquiry</title>
+    <title>Login</title>
     <style>
         body {
             font-family: Calibri, sans-serif;
@@ -18,8 +17,7 @@
             text-align: center;
         }
 
-        input,
-        select {
+        input {
             width: 200px;
             padding: 8px;
             margin-bottom: 10px;
@@ -46,264 +44,48 @@
             color: #ff0023;
         }
 
-        #responseData {
-            margin-top: 20px;
-            text-align: left;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .response-text {
-            color: #8013d3;
-            text-align: left;
-        }
-
-        .response-banner {
+        #errorMessage {
+            color: #ff0023;
+            margin-top: 10px;
             display: none;
-            padding: 10px;
-            border-radius: 5px;
-            width: 20%;
-            margin: 20px auto 0;
-            background-color: #8013d3;
-            color: #08cebe;
-            font-weight: bold;
-        }
-
-        #notSetupBanner,
-        #notAvailableBanner {
-            background-color: #8013d3;
-            color: #08cebe;
-            font-weight: bold;
-            width: 20%;
-
-        }
-
-        table {
-            width: 60%;
-            margin: 20px auto;
-            border-collapse: collapse;
-            font-family: Calibri, sans-serif;
-        }
-
-        th,
-        td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-            font-family: Calibri, sans-serif;
-        }
-
-        th {
-            background-color: #ff0023;
-            color: white;
-        }
-
-        th:first-child,
-        td:first-child {
-            width: 30%;
-        }
-
-        th:last-child,
-        td:last-child {
-            width: 40%;
-        }
-
-        #marginStatement {
-            margin-top: 20px;
-            padding: 10px;
-            border-radius: 5px;
-            background-color: #8013d3;
-            color: #08cebe;
-            font-weight: bold;
-            width: 20%;
-            display: none;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        #labelsAndButtonContainer {
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        #labelsAndButtonContainer label,
-        #labelsAndButtonContainer input {
-            display: block;
-            margin-bottom: 10px;
         }
     </style>
 </head>
-
 <body>
-    <h1>Rate Enquiry</h1>
+    <h1>Login</h1>
 
-    <label for="acquirerId">Acquirer ID:</label>
-    <input type="text" id="acquirerId" name="acquirerId" maxlength="3" required>
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" required>
 
-    <label for="merchantId">Merchant ID:</label>
-    <input type="text" id="merchantId" name="merchantId" maxlength="15" required>
-
-    <label for="currency">Currency:</label>
-    <select id="currency" name="currency" required>
-        <option value="USD">USD</option>
-        <option value="AED">AED</option>
-        <option value="AUD">AUD</option>
-        <option value="CAD">CAD</option>
-        <option value="EUR">EUR</option>
-        <option value="GBP">GBP</option>
-        <option value="INR">INR</option>
-        <option value="IQD">IQD</option>
-        <option value="NZD">NZD</option>
-        <option value="PKR">PKR</option>
-        </select>
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required>
 
     <br>
-
-    <button type="button" onclick="sendFirstStageData()">Send</button>
-
-    <div id="notSetupBanner" class="response-banner">Merchant is not setup</div>
-    <div id="notAvailableBanner" class="response-banner">Exchange Rate not available</div>
-
-    <div id="responseData"></div>
-
-    <div id="marginStatement">Exchange rate is inclusive of margin</div>
-
-    <div id="labelsAndButtonContainer"></div>
+    <button type="button" onclick="login()">Login</button>
+    
+    <div id="errorMessage">Invalid username or password</div>
 
     <script>
-        // Global variable to store responseData from the first stage
-        var responseDataGlobal;
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
 
-        // Function to send data and display response for the first stage
-        async function sendFirstStageData() {
-            var acquirerId = document.getElementById("acquirerId").value;
-            var merchantId = document.getElementById("merchantId").value;
-            var currency = document.getElementById("currency").value;
-
-            // Store the generated URL in the variable
-            var generatedURL = `https://dhsrest.fmsapps.com/dhsv2/acquirers/${acquirerId}/merchants/${merchantId}/dccoffers?currency=${currency}&baseamount=1.00`;
-
-            try {
-                // Fetch JSON response from the generated URL
-                var response = await fetch(generatedURL);
-                responseDataGlobal = await response.json();
-
-                // Check if the word "No such Merchant" is mentioned in the response
-                if (JSON.stringify(responseDataGlobal).toLowerCase().includes("no such merchant")) {
-                    document.getElementById("notSetupBanner").style.display = "block";
-                    document.getElementById("notAvailableBanner").style.display = "none";
-                    // Hide the response content
-                    document.getElementById("responseData").innerHTML = "";
-                    // Hide the statement about the margin
-                    document.getElementById("marginStatement").style.display = "none";
-                } else if (JSON.stringify(responseDataGlobal).includes("{}")) {
-                    // Display the not available banner
-                    document.getElementById("notAvailableBanner").style.display = "block";
-                    document.getElementById("notSetupBanner").style.display = "none";
-                    // Hide the response content
-                    document.getElementById("responseData").innerHTML = "";
-                    // Hide the statement about the margin
-                    document.getElementById("marginStatement").style.display = "none";
-                } else if (JSON.stringify(responseDataGlobal).toLowerCase().includes("rate")) {
-                    // Display the labels with rate, inverse rate, and editable field for foreign amount
-                    document.getElementById("notSetupBanner").style.display = "none";
-                    document.getElementById("notAvailableBanner").style.display = "none";
-
-                    var exchangeRate = responseDataGlobal.exchangeRate;
-
-                    // Calculate the inverse of responseData.exchangeRate.rate
-                    var inverseRate = 1 / responseDataGlobal.exchangeRate.rate;
-
-                    // Display the labels and the second "Send" button
-                    var labelsAndButtonContent = `<div id="labelsAndButtonContainer">
-                                                    <label>Foreign Amount:</label>
-                                                    <input type="text" id="foreignAmount">
-                                                    <label>Foreign Currency:</label>
-                                                    <input type="text" id="foreignCurrency" readonly value="${currency}">
-                                                    <button type="button" onclick="generateBaseAmount()">Generate Base Amount</button>
-                                                </div>`;
-
-                    // Display the labels and the second "Send" button
-                    document.getElementById("responseData").innerHTML = labelsAndButtonContent;
-
-                    // Display the banner statement about the margin
-                    document.getElementById("marginStatement").style.display = "block";
-
-                    // Display the initial response data in the console
-                    console.log("Initial Response Data:", responseDataGlobal);
-                } else {
-                    // ... (your existing code for handling other cases)
-                }
-
-            } catch (error) {
-                console.error("Error fetching data:", error);
+            // For demonstration purposes, using a simple hardcoded check
+            // In a real application, this should be replaced with proper authentication
+            if (username === 'admin' && password === 'password123') {
+                // Store authentication state
+                sessionStorage.setItem('isAuthenticated', 'true');
+                // Redirect to rate enquiry page
+                window.location.href = 'rate-enquiry.html';
+            } else {
+                document.getElementById('errorMessage').style.display = 'block';
             }
         }
 
-        // Function to generate base amount and display response for the second stage
-        function generateBaseAmount() {
-            var foreignAmount = document.getElementById("foreignAmount").value;
-            var inverseRate = 1 / responseDataGlobal.exchangeRate.rate; // Use the inverse rate from the first stage
-
-            // Calculate base amount by multiplying foreign amount with inverse rate
-            var baseAmount = (foreignAmount * inverseRate).toFixed(2); // Round to 2 decimal places
-
-            // Check if the table already exists
-            var existingTable = document.getElementById("resultTable");
-
-            if (!existingTable) {
-                // If the table doesn't exist, create a new one
-                var tableContent = `<table id="resultTable">
-                                        <tr>
-                                            <th>Field</th>
-                                            <th>Value</th>
-                                        </tr>
-                                        <tr>
-                                            <td>Base Amount</td>
-                                            <td>${responseDataGlobal.exchangeRate.baseCurrency.alphaCode} ${baseAmount}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Foreign Amount</td>
-                                            <td>${document.getElementById("foreignCurrency").value} ${foreignAmount}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Exchange Rate</td>
-                                            <td>1 ${responseDataGlobal.exchangeRate.baseCurrency.alphaCode} = ${responseDataGlobal.exchangeRate.rate} ${document.getElementById("foreignCurrency").value}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Inverse Rate</td>
-                                            <td>1 ${document.getElementById("foreignCurrency").value} = ${(inverseRate).toFixed(4)} ${responseDataGlobal.exchangeRate.baseCurrency.alphaCode}</td>
-                                        </tr>
-                                    </table>`;
-
-                // Append the new table content to the existing content
-                document.getElementById("responseData").innerHTML += tableContent;
-            } else {
-                // If the table already exists, update its content
-                existingTable.innerHTML = `<tr>
-                                            <th>Field</th>
-                                            <th>Value</th>
-                                        </tr>
-                                        <tr>
-                                            <td>Base Amount</td>
-                                            <td>${responseDataGlobal.exchangeRate.baseCurrency.alphaCode} ${baseAmount}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Foreign Amount</td>
-                                            <td>${document.getElementById("foreignCurrency").value} ${foreignAmount}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Exchange Rate</td>
-                                            <td>1 ${responseDataGlobal.exchangeRate.baseCurrency.alphaCode} = ${responseDataGlobal.exchangeRate.rate} ${document.getElementById("foreignCurrency").value}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Inverse Rate</td>
-                                            <td>1 ${document.getElementById("foreignCurrency").value} = ${(inverseRate).toFixed(4)} ${responseDataGlobal.exchangeRate.baseCurrency.alphaCode}</td>
-                                        </tr>`;
-            }
+        // Prevent accessing this page if already logged in
+        if (sessionStorage.getItem('isAuthenticated') === 'true') {
+            window.location.href = 'rate-enquiry.html';
         }
     </script>
 </body>
-
-</html>
+</html> 
